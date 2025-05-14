@@ -51,4 +51,20 @@ a:hover {
   color: var(--yellow);
 }
 
+h1 {
+  text-align: center;
+  color: var(--yellow);
+}
+
 /* Additional styles can use the palette variables */
+.out-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.out-container > canvas {
+  width: 320px;
+  height: 320px;
+  border: var(--gray) 1px solid;
+}
