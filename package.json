@@ -1,0 +1,24 @@
+{
+  "author": "Cedric Geissmann",
+  "name": "template-npm",
+  "homepage": "https://cedricgeissmann.github.io/template-npm/",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview --host",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d docs"
+  },
+  "dependencies": {
+    "vite": "^6.3.5"
+  },
+  "devDependencies": {
+    "eslint": "^9.26.0",
+    "gh-pages": "^6.3.0",
+    "prettier": "^3.5.3"
+  }
+}
