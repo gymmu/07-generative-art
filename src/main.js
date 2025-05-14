@@ -19,6 +19,10 @@ async function composeImage(ctx, canvas, sliders) {
 
   for (const category of categories) {
     const index = sliders[category]
+    if (index === 0) {
+      // Skip this category if slider value is 0
+      continue
+    }
     const src = getFileByIndex(category, index)
     try {
       const img = await loadImage(src)
