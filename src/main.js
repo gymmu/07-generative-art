@@ -15,7 +15,6 @@ function getFileByIndex(category, index) {
 
 async function composeImage(ctx, canvas, sliders) {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
-  console.log(Object.keys(sliders))
   const categories = Object.keys(sliders)
 
   for (const category of categories) {
@@ -42,11 +41,16 @@ function main() {
   canvas.width = 320
   canvas.height = 320
 
-  const sliders = {
-    "00-bg": document.getElementById("slider-00-bg"),
-    "10-main": document.getElementById("slider-10-main"),
-    "20-hands": document.getElementById("slider-20-hands"),
-  }
+  // Dynamically get all sliders with id starting with "slider-"
+  const sliderElements = document.querySelectorAll(
+    'input[type="range"][id^="slider-"]',
+  )
+  const sliders = {}
+
+  sliderElements.forEach((slider) => {
+    const category = slider.id.replace("slider-", "")
+    sliders[category] = slider
+  })
 
   // Add event listeners to update slider value display
   Object.keys(sliders).forEach((key) => {
@@ -63,11 +67,10 @@ function main() {
   const generateBtn = document.getElementById("generate-btn")
 
   async function generate() {
-    const sliderValues = {
-      "00-bg": parseInt(sliders["00-bg"].value, 10),
-      "10-main": parseInt(sliders["10-main"].value, 10),
-      "20-hands": parseInt(sliders["20-hands"].value, 10),
-    }
+    const sliderValues = {}
+    Object.keys(sliders).forEach((key) => {
+      sliderValues[key] = parseInt(sliders[key].value, 10)
+    })
     await composeImage(ctx, canvas, sliderValues)
   }
 
