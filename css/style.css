@@ -94,10 +94,14 @@ h1 {
 .slider-group {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
 }
 
-.slider-group label {
+.label-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
   font-weight: bold;
 }
 

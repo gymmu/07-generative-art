@@ -43,6 +43,18 @@ function main() {
     "20-hands": document.getElementById("slider-20-hands"),
   }
 
+  // Add event listeners to update slider value display
+  Object.keys(sliders).forEach((key) => {
+    const slider = sliders[key]
+    const valueSpan = document.getElementById(`value-${key}`)
+    if (valueSpan) {
+      valueSpan.textContent = slider.value
+      slider.addEventListener("input", () => {
+        valueSpan.textContent = slider.value
+      })
+    }
+  })
+
   const generateBtn = document.getElementById("generate-btn")
 
   async function generate() {
