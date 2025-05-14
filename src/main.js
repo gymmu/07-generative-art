@@ -15,7 +15,8 @@ function getFileByIndex(category, index) {
 
 async function composeImage(ctx, canvas, sliders) {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
-  const categories = ["00-bg", "10-main", "20-hands"]
+  console.log(Object.keys(sliders))
+  const categories = Object.keys(sliders)
 
   for (const category of categories) {
     const index = sliders[category]
