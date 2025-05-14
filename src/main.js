@@ -33,6 +33,13 @@ async function composeImage(ctx, canvas, sliders) {
   }
 }
 
+const categories = [
+  { id: "00-bg", label: "00-bg", min: 0, max: 1, defaultValue: 1 },
+  { id: "10-main", label: "10-main", min: 0, max: 1, defaultValue: 1 },
+  { id: "20-hands", label: "20-hands", min: 0, max: 2, defaultValue: 1 },
+  { id: "20-shoes", label: "20-shoes", min: 0, max: 1, defaultValue: 1 },
+]
+
 function main() {
   const canvas = document.getElementById("canvas")
   const ctx = canvas.getContext("2d")
@@ -41,30 +48,59 @@ function main() {
   canvas.width = 320
   canvas.height = 320
 
-  // Dynamically get all sliders with id starting with "slider-"
-  const sliderElements = document.querySelectorAll(
-    'input[type="range"][id^="slider-"]',
-  )
+  const sidebar = document.querySelector(".sidebar")
+
+  // Create slider groups dynamically
   const sliders = {}
 
-  sliderElements.forEach((slider) => {
-    const category = slider.id.replace("slider-", "")
-    sliders[category] = slider
-  })
+  categories.forEach(({ id, label, min, max, defaultValue }) => {
+    // Create slider group container
+    const sliderGroup = document.createElement("div")
+    sliderGroup.className = "slider-group"
 
-  // Add event listeners to update slider value display
-  Object.keys(sliders).forEach((key) => {
-    const slider = sliders[key]
-    const valueSpan = document.getElementById(`value-${key}`)
-    if (valueSpan) {
+    // Create label group container
+    const labelGroup = document.createElement("div")
+    labelGroup.className = "label-group"
+
+    // Create label element
+    const labelEl = document.createElement("label")
+    labelEl.setAttribute("for", `slider-${id}`)
+    labelEl.textContent = label
+
+    // Create value span
+    const valueSpan = document.createElement("span")
+    valueSpan.className = "slider-value"
+    valueSpan.id = `value-${id}`
+    valueSpan.textContent = defaultValue
+
+    // Append label and value span to label group
+    labelGroup.appendChild(labelEl)
+    labelGroup.appendChild(valueSpan)
+
+    // Create input range slider
+    const slider = document.createElement("input")
+    slider.type = "range"
+    slider.id = `slider-${id}`
+    slider.min = min
+    slider.max = max
+    slider.value = defaultValue
+
+    // Append label group and slider to slider group
+    sliderGroup.appendChild(labelGroup)
+    sliderGroup.appendChild(slider)
+
+    // Insert slider group before the generate button
+    const generateBtn = document.getElementById("generate-btn")
+    sidebar.insertBefore(sliderGroup, generateBtn)
+
+    // Store slider reference
+    sliders[id] = slider
+
+    // Add event listener to update value span on input
+    slider.addEventListener("input", () => {
       valueSpan.textContent = slider.value
-      slider.addEventListener("input", () => {
-        valueSpan.textContent = slider.value
-      })
-    }
+    })
   })
-
-  const generateBtn = document.getElementById("generate-btn")
 
   async function generate() {
     const sliderValues = {}
@@ -74,6 +110,7 @@ function main() {
     await composeImage(ctx, canvas, sliderValues)
   }
 
+  const generateBtn = document.getElementById("generate-btn")
   generateBtn.addEventListener("click", generate)
 
   // Initial image composition on page load
