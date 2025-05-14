@@ -1,38 +1,63 @@
-function addToCanvas(ctx, filename) {
-  const backgroundImage = new Image()
-  backgroundImage.src = filename
-
-  backgroundImage.onload = function () {
-    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height)
-  }
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => resolve(img)
+    img.onerror = reject
+    img.src = src
+  })
 }
 
-function random(maxIndex) {
-  const r = Math.floor(Math.random() * maxIndex) + 1
-  if (r < 10) {
-    return `00${r}`
-  } else if (r < 100) {
-    return `0${r}`
-  } else if (r < 1000) {
-    return `${r}`
-  } else {
-    return "001"
-  }
+function getFileByIndex(category, index) {
+  const randomIndex = Math.floor(Math.random() * index) + 1
+  const indexStr = randomIndex.toString().padStart(3, "0")
+  return `./parts/${category}-${indexStr}.png`
 }
 
-function getFileByPattern(category, maxIndex) {
-  const ret = `./parts/${category}-${random(maxIndex)}.png`
-  console.log(ret)
-  return ret
+async function composeImage(ctx, canvas, sliders) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  const categories = ["00-bg", "10-main", "20-hands"]
+
+  for (const category of categories) {
+    const index = sliders[category]
+    const src = getFileByIndex(category, index)
+    try {
+      const img = await loadImage(src)
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+    } catch (error) {
+      console.error(`Failed to load image: ${src}`, error)
+    }
+  }
 }
 
 function main() {
   const canvas = document.getElementById("canvas")
   const ctx = canvas.getContext("2d")
 
-  addToCanvas(ctx, getFileByPattern("00-bg", 1))
-  addToCanvas(ctx, getFileByPattern("10-main", 1))
-  addToCanvas(ctx, getFileByPattern("20-hands", 2))
+  // Set canvas size explicitly to match CSS size
+  canvas.width = 320
+  canvas.height = 320
+
+  const sliders = {
+    "00-bg": document.getElementById("slider-00-bg"),
+    "10-main": document.getElementById("slider-10-main"),
+    "20-hands": document.getElementById("slider-20-hands"),
+  }
+
+  const generateBtn = document.getElementById("generate-btn")
+
+  async function generate() {
+    const sliderValues = {
+      "00-bg": parseInt(sliders["00-bg"].value, 10),
+      "10-main": parseInt(sliders["10-main"].value, 10),
+      "20-hands": parseInt(sliders["20-hands"].value, 10),
+    }
+    await composeImage(ctx, canvas, sliderValues)
+  }
+
+  generateBtn.addEventListener("click", generate)
+
+  // Initial image composition on page load
+  generate()
 }
 
 main()

@@ -61,10 +61,57 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 1;
+  padding: 10px;
 }
 
 .out-container > canvas {
   width: 320px;
   height: 320px;
   border: var(--gray) 1px solid;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: var(--gray);
+  padding: 15px;
+  border-radius: 8px;
+  color: var(--background);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.slider-group label {
+  font-weight: bold;
+}
+
+#generate-btn {
+  padding: 10px;
+  background-color: var(--yellow);
+  border: none;
+  border-radius: 5px;
+  color: var(--background);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#generate-btn:hover {
+  background-color: var(--green);
 }
